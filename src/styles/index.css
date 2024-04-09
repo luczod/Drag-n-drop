@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css?family=Roboto:400,500&display=swap');
+@import url("https://fonts.googleapis.com/css?family=Roboto:400,500&display=swap");
 
 @tailwind base;
 @tailwind components;
@@ -18,7 +18,7 @@ body,
 }
 
 body {
-  font: 14px 'Roboto', sans-serif;
+  font: 14px "Roboto", sans-serif;
   background: #ecf1f8;
   color: #333;
   -webkit-font-smoothing: antialiased !important;
@@ -70,4 +70,8 @@ ul {
 
 .btn-blue {
   @apply text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg px-5 py-2.5 me-2 mb-2;
+}
+
+.grabbing {
+  @apply shadow-none bg-transparent cursor-grabbing rounded-none border-2 border-dashed border-[rgba(0,0,0,0.2)];
 }
