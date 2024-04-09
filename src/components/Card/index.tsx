@@ -1,31 +1,45 @@
-import { PersonIcon } from "@radix-ui/react-icons";
-import { useRef } from "react";
-import { useDrag, useDrop } from "react-dnd";
+import { useRef, useContext } from 'react';
+import { PersonIcon } from '@radix-ui/react-icons';
+import { useDrag, useDrop } from 'react-dnd';
+import BoardContext from '../Board/context';
 
 type TCard = {
   id: number;
   content: string;
 };
 
-type TItem = { type: string; id: number; index: number };
+type TItem = { id: number; index: number; listIndex: number };
 
-export function Card({ card, index }: { card: TCard; index: number }) {
+export function Card({
+  card,
+  index,
+  listIndex,
+}: {
+  card: TCard;
+  index: number;
+  listIndex: number;
+}) {
   const liRef = useRef<HTMLLIElement>(null);
+  const ctx = useContext(BoardContext);
+
   const [{ isDragging }, dragRef] = useDrag({
-    type: "CARD",
-    item: { id: card.id, index: index + 1, content: card.content },
+    type: 'CARD',
+    item: { id: card.id, index, listIndex },
     collect: (monitor) => ({
       isDragging: monitor.isDragging(),
     }),
   });
 
   const [, dropRef] = useDrop<TItem>({
-    accept: "CARD",
+    accept: 'CARD',
     hover(item, monitor) {
-      const draggedIndex = item.index;
-      const targetIndex = index + 1;
+      const draggedListIndex = item.listIndex;
+      const targetListIndex = listIndex;
 
-      if (draggedIndex === targetIndex) {
+      const draggedIndex = item.index;
+      const targetIndex = index;
+
+      if (draggedIndex === targetIndex && draggedListIndex === targetListIndex) {
         return;
       }
       const targetSize = liRef.current?.getBoundingClientRect();
@@ -45,7 +59,10 @@ export function Card({ card, index }: { card: TCard; index: number }) {
         return;
       }
 
-      console.log(targetSize);
+      ctx?.move(draggedListIndex, targetListIndex, draggedIndex, targetIndex);
+
+      item.index = targetIndex;
+      item.listIndex = targetListIndex;
     },
   });
 
@@ -57,13 +74,8 @@ export function Card({ card, index }: { card: TCard; index: number }) {
       aria-pressed={isDragging}
       className="flex items-center py-2 px-3 aria-pressed:bg-transparent aria-pressed:hover:scale-100 aria-pressed:border-2 aria-pressed:border-gray-400 aria-pressed:border-dashed cursor-grab hover:scale-110 mx-auto transition duration-300 ease-in-out border-t-[20px] border-t-[rgba(230,236,245,0.4)] bg-white shadow-md rounded-sm"
     >
-      <span
-        aria-pressed={isDragging}
-        className="space-y-4 aria-pressed:invisible "
-      >
-        <p className="text-base font-medium uppercase leading-none">
-          {card.content}
-        </p>
+      <span aria-pressed={isDragging} className="space-y-4 aria-pressed:invisible ">
+        <p className="text-base font-medium uppercase leading-none">{card.content}</p>
         <PersonIcon className="border-2 mt-2 size-6" />
       </span>
     </li>

@@ -5,7 +5,15 @@ type TList = {
   content: string;
 };
 
-export function List({ title, cards }: { title: string; cards: TList[] }) {
+export function List({
+  title,
+  listIndex,
+  cards,
+}: {
+  title: string;
+  listIndex: number;
+  cards: TList[];
+}) {
   return (
     <section
       data-sucess={title === "Concluído"}
@@ -24,7 +32,7 @@ export function List({ title, cards }: { title: string; cards: TList[] }) {
       </header>
       <ul className="p-2 w-72 overflow-x-hidden scrollbar space-y-4">
         {cards.map((item, index) => (
-          <Card key={item.id} index={index} card={item} />
+          <Card key={item.id} listIndex={listIndex} index={index} card={item} />
         ))}
       </ul>
     </section>
